@@ -160,8 +160,11 @@ async function handleSquareClick(index) {
     const square = document.querySelector(`[data-index="${index}"]`);
     const squareData = gameConfig.squares[index];
 
+    // Ensure checkedSquares array exists
+    const checkedSquares = currentPlayerData.checkedSquares || [];
+
     // Check if already checked by current player
-    if (currentPlayerData.checkedSquares.includes(index)) {
+    if (checkedSquares.includes(index)) {
         return;
     }
 
@@ -174,7 +177,7 @@ async function handleSquareClick(index) {
     }
 
     // Add square to checked list
-    const newCheckedSquares = [...currentPlayerData.checkedSquares, index];
+    const newCheckedSquares = [...checkedSquares, index];
 
     // Update Firebase
     await db.ref(`${GAME_REF}/players/${playerId}/checkedSquares`).set(newCheckedSquares);

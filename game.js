@@ -379,9 +379,10 @@ async function checkFirstForCompletion(type, completed) {
 function updateBoardCheckedStates() {
     if (!currentPlayerData) return;
 
+    const checkedSquares = currentPlayerData.checkedSquares || [];
     const squares = document.querySelectorAll('.bingo-square');
     squares.forEach((square, index) => {
-        if (currentPlayerData.checkedSquares.includes(index)) {
+        if (checkedSquares.includes(index)) {
             square.classList.add('checked');
         } else {
             square.classList.remove('checked');

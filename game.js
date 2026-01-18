@@ -163,8 +163,19 @@ async function handleSquareClick(index) {
     // Ensure checkedSquares array exists
     const checkedSquares = currentPlayerData.checkedSquares || [];
 
-    // Check if already checked by current player
+    // Check if already checked by current player - if so, uncheck it
     if (checkedSquares.includes(index)) {
+        // Remove square from checked list
+        const newCheckedSquares = checkedSquares.filter(i => i !== index);
+
+        // Update Firebase
+        await db.ref(`${GAME_REF}/players/${playerId}/checkedSquares`).set(newCheckedSquares);
+
+        // Check for completions
+        await checkCompletions(newCheckedSquares);
+
+        // Recalculate score
+        await calculateAndUpdateScore();
         return;
     }
 
@@ -299,14 +310,19 @@ async function calculateAndUpdateScore() {
 
     // Add completion bonuses
     const bonuses = gameConfig.completionBonuses;
-    const completions = currentPlayerData.completions;
+    const completions = currentPlayerData.completions || {
+        rows: [],
+        columns: [],
+        diagonals: [],
+        fullBoard: false
+    };
 
     // Check if only first player gets bonus
     if (bonuses.onlyFirstPlayerGetsBonus) {
         // Check if current player is first for each completion
-        const isFirstForRows = await checkFirstForCompletions('rows', completions.rows);
-        const isFirstForColumns = await checkFirstForCompletions('columns', completions.columns);
-        const isFirstForDiagonals = await checkFirstForCompletions('diagonals', completions.diagonals);
+        const isFirstForRows = await checkFirstForCompletions('rows', completions.rows || []);
+        const isFirstForColumns = await checkFirstForCompletions('columns', completions.columns || []);
+        const isFirstForDiagonals = await checkFirstForCompletions('diagonals', completions.diagonals || []);
         const isFirstForFullBoard = await checkFirstForCompletion('fullBoard', completions.fullBoard);
 
         totalScore += isFirstForRows.length * (bonuses.row || 0);
@@ -317,9 +333,9 @@ async function calculateAndUpdateScore() {
         }
     } else {
         // Everyone gets bonuses
-        totalScore += completions.rows.length * (bonuses.row || 0);
-        totalScore += completions.columns.length * (bonuses.column || 0);
-        totalScore += completions.diagonals.length * (bonuses.diagonal || 0);
+        totalScore += (completions.rows || []).length * (bonuses.row || 0);
+        totalScore += (completions.columns || []).length * (bonuses.column || 0);
+        totalScore += (completions.diagonals || []).length * (bonuses.diagonal || 0);
         if (completions.fullBoard) {
             totalScore += bonuses.fullBoard || 0;
         }
@@ -331,7 +347,7 @@ async function calculateAndUpdateScore() {
 
 // Check if current player is first for specific completions
 async function checkFirstForCompletions(type, completedIndices) {
-    if (completedIndices.length === 0) return [];
+    if (!completedIndices || completedIndices.length === 0) return [];
 
     const snapshot = await db.ref(`${GAME_REF}/players`).once('value');
     const players = snapshot.val();
@@ -486,6 +502,16 @@ async function handleConfigUpload(event) {
             throw new Error('Invalid configuration file');
         }
 
+        // If more squares than needed, randomly select
+        const { rows, columns } = config.boardSize;
+        const totalSquares = rows * columns;
+
+        if (config.squares.length > totalSquares) {
+            // Randomly shuffle and take only what we need
+            const shuffled = [...config.squares].sort(() => Math.random() - 0.5);
+            config.squares = shuffled.slice(0, totalSquares);
+        }
+
         // Upload to Firebase
         await db.ref(`${GAME_REF}/config`).set(config);
 
@@ -532,8 +558,8 @@ function validateConfig(config) {
     const { rows, columns } = config.boardSize;
     const totalSquares = rows * columns;
 
-    // Check if number of squares matches board size
-    if (config.squares.length !== totalSquares) {
+    // Check if there are enough squares (can have more, will randomly select)
+    if (config.squares.length < totalSquares) {
         return false;
     }
 

@@ -1,0 +1,148 @@
+{
+  "boardSize": {
+    "rows": 5,
+    "columns": 5
+  },
+  "squares": [
+    {
+      "name": "Go through a Portal",
+      "rarity": "common",
+      "points": 1
+    },
+    {
+      "name": "Find a hidden chest",
+      "rarity": "common",
+      "points": 1
+    },
+    {
+      "name": "Complete a side quest",
+      "rarity": "common",
+      "points": 2
+    },
+    {
+      "name": "Defeat 10 enemies",
+      "rarity": "common",
+      "points": 2
+    },
+    {
+      "name": "Collect 100 coins",
+      "rarity": "common",
+      "points": 1
+    },
+    {
+      "name": "Fully explore a map",
+      "rarity": "uncommon",
+      "points": 3
+    },
+    {
+      "name": "Unlock a new ability",
+      "rarity": "uncommon",
+      "points": 4
+    },
+    {
+      "name": "Solve a puzzle",
+      "rarity": "uncommon",
+      "points": 3
+    },
+    {
+      "name": "Find a secret area",
+      "rarity": "uncommon",
+      "points": 5
+    },
+    {
+      "name": "Upgrade equipment",
+      "rarity": "uncommon",
+      "points": 3
+    },
+    {
+      "name": "Find an egg",
+      "rarity": "rare",
+      "points": 10
+    },
+    {
+      "name": "Defeat a mini-boss",
+      "rarity": "rare",
+      "points": 8
+    },
+    {
+      "name": "Complete a challenge mode",
+      "rarity": "rare",
+      "points": 12
+    },
+    {
+      "name": "Discover a rare item",
+      "rarity": "rare",
+      "points": 10
+    },
+    {
+      "name": "Reach max level",
+      "rarity": "rare",
+      "points": 15
+    },
+    {
+      "name": "Complete speedrun objective",
+      "rarity": "epic",
+      "points": 20
+    },
+    {
+      "name": "Finish without taking damage",
+      "rarity": "epic",
+      "points": 25
+    },
+    {
+      "name": "Collect all collectibles",
+      "rarity": "epic",
+      "points": 30
+    },
+    {
+      "name": "Complete without using items",
+      "rarity": "epic",
+      "points": 22
+    },
+    {
+      "name": "Unlock secret ending",
+      "rarity": "epic",
+      "points": 35
+    },
+    {
+      "name": "Use a Jetpack",
+      "rarity": "legendary",
+      "points": 27
+    },
+    {
+      "name": "Find the golden trophy",
+      "rarity": "legendary",
+      "points": 50
+    },
+    {
+      "name": "Complete 100% achievements",
+      "rarity": "legendary",
+      "points": 100
+    },
+    {
+      "name": "Defeat the final boss flawlessly",
+      "rarity": "legendary",
+      "points": 75
+    },
+    {
+      "name": "Discover the ultimate secret",
+      "rarity": "legendary",
+      "points": 60
+    }
+  ],
+  "rarityColors": {
+    "common": "#808080",
+    "uncommon": "#1eff00",
+    "rare": "#0070dd",
+    "epic": "#a335ee",
+    "legendary": "#ff8000"
+  },
+  "completionBonuses": {
+    "row": 10,
+    "column": 10,
+    "diagonal": 15,
+    "fullBoard": 50,
+    "onlyFirstPlayerGetsBonus": true
+  },
+  "exclusiveSquares": false
+}
